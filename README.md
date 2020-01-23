@@ -1,14 +1,14 @@
 
-##### REST API using Python, Pyramid, SqlAlchemy, Postgres
+## REST API using Python, Pyramid, SqlAlchemy, Postgres
 
-#### Prerequisites
+### Prerequisites
 ```
 sudo apt-get install postgresql
 sudo apt-get install python-psycopg2
 sudo apt-get install libpq-dev
 ```
 
-#### Login to psql
+### Login to psql
 ```
 psql -d kbmdb -U  binny -w
 Password:
@@ -18,7 +18,7 @@ psql> GRANT CONNECT ON DATABASE kbmdb TO binny;
 
 ```
 
-#### Project Installation
+### Project Installation
 ```
 cd kbmanagement/
 export VENV=~/workspace/personal/pyramid_projects/kbmanagement/env
@@ -35,7 +35,7 @@ $VENV/bin/pytest kbm/tests.py -q
 
 ### REST API Testing
 
-## Run below scripts for GET, POST, PUT, DELETE
+### Run below scripts for GET, POST, PUT, DELETE
 ```
 $VENV/bin/python api_test.py get
 $VENV/bin/python api_test.py post
@@ -46,20 +46,20 @@ $VENV/bin/python api_test.py delete 2
 
 ```
 
-## OR
+### OR
 
-## Send requests through python shell or postman
+### Send requests through python shell or postman
 
 ```
 import requests
 ```
 
-## GET operation
+### GET operation
 ```
 requests.get('http://localhost:6543/kbm')
 ```
 
-## POST operation
+### POST operation
 ```
 requests.post(
   'http://localhost:6543/kbm',
@@ -72,7 +72,7 @@ requests.post(
                   }))
 ```
 
-## PUT operation
+### PUT operation
 ```
 requests.put(
   'http://localhost:6543/kbm/1',
@@ -85,7 +85,7 @@ requests.put(
                   }))
 ```
 
-## DELETE operation
+### DELETE operation
 ```
 requests.delete('http://localhost:6543/kbm/1')
 ```
