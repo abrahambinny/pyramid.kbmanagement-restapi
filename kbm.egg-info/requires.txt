@@ -1,0 +1,15 @@
+pyramid
+sqlalchemy
+pyramid_tm
+zope.sqlalchemy
+cornice
+waitress
+pytest
+webtest
+requests
+psycopg2
+
+[dev]
+pyramid_debugtoolbar
+pytest
+webtest
