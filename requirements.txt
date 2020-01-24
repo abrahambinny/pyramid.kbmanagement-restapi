@@ -2,7 +2,7 @@ arrow==0.10.0
 binaryornot==0.4.4
 chardet==3.0.4
 click==6.7
-colander==1.4
+colander==1.7.0
 cookiecutter==1.5.1
 cornice==2.4.0
 decorator==4.1.2
