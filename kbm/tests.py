@@ -59,4 +59,4 @@ class KnowledgeFunctionalTests(unittest.TestCase):
         res = self.testapp.get('/kbm', status=200)
         print(res.body)
         if(res.body):
-            self.assertIn(b'Postgres', res.body)
+            self.assertIn(b'python', res.body)
