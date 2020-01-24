@@ -29,7 +29,15 @@ $VENV/bin/pip install -r requirements.txt
 $VENV/bin/python setup.py develop
 $VENV/bin/pip install psycopg2 --upgrade
 $VENV/bin/initialize_kbm_db kbm.ini
+```
+
+### Run the server
+```
 $VENV/bin/pserve kbm.ini --reload
+```
+
+### Unit testing
+```
 $VENV/bin/pytest kbm/tests.py -q
 ```
 
