@@ -8,12 +8,6 @@ curl -X PUT 'localhost:9200/kbmindex' -H 'Content-Type: application/json' -d' {"
 
  curl -XGET "https://localhost:9200/_search" {"query": {"query_string" : {"query" : "(python) OR (facebook)", "default_field" : "title"}}}
 
-  {
-    "query_string": {
-      "query": "(call_dest_regid:UK_AS5400A AND call_dest_uport:60) OR (call_dest_regid:UK_AS5350B AND call_dest_uport:60) "
-    }
-  }
-
   curl -X GET "localhost:9200/kbmindex/_search?pretty" -H 'Content-Type: application/json' -d'{"query": {"query_string" : {"query" : "(microsoft) OR (facebook)", "default_field" : "title"}}}'
 
 
