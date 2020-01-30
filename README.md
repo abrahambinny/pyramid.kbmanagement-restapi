@@ -68,7 +68,7 @@ $VENV/bin/python api_test.py search 'python'
 import requests
 ```
 
-### SEARCH functionality
+### SEARCH operation
 ```
 requests.get('http://localhost:6543/kbm?search=(facebook OR microsoft) AND NOT (python)')
 requests.get('http://localhost:6543/kbm?search=(facebook AND microsoft) AND NOT (python)')
