@@ -26,6 +26,7 @@ class Knowledge(Base):
     create_by = Column(Text)
     priority = Column(Integer)
 
+    # Indexing the fields title and description for search implementation
     __table_args__ = (
         Index(
             'ix_knowledge_tsv',

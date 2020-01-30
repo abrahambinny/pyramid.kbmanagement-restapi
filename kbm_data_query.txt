@@ -11,10 +11,10 @@ curl -X PUT 'localhost:9200/kbmindex' -H 'Content-Type: application/json' -d' {"
   curl -X GET "localhost:9200/kbmindex/_search?pretty" -H 'Content-Type: application/json' -d'{"query": {"query_string" : {"query" : "(microsoft) OR (facebook)", "default_field" : "title"}}}'
 
 
-  '((python AND facebook) NOT (microsoft)) AND'
+  (facebook AND microsoft) AND NOT (python)
 
   pk python binny salah
-  1. '(python OR facebook) AND NOT(microsoft OR hhh)'
+  1. (python OR facebook) AND NOT (microsoft)
   True and Tues
   True
 
