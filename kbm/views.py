@@ -23,7 +23,8 @@ class KnowledgeView(object):
         if (search_item):
             """
             # Newly implemented functionality for search in title and description fields.
-            Creating query string according to the search query and search the keyword on the index created in postgres models using tsvector
+            Creating query string according to the search query and search the keyword
+            on the index created in postgres models using tsvector
             """
 
             search_item = search_item.upper()
@@ -34,13 +35,16 @@ class KnowledgeView(object):
                     clean_word = word.replace('(','').replace(')','').replace(' ','').strip()
                     print(clean_word)
                     if (clean_word):
-                        sub_query = """("Knowledge".description @@ plainto_tsquery('{}') OR "Knowledge".title @@ plainto_tsquery('{}'))""".format(clean_word.lower(), clean_word.lower())
+                        sub_query = """("Knowledge".description @@ plainto_tsquery('{}')\
+                         OR "Knowledge".title @@ plainto_tsquery('{}'))""".format(clean_word.lower(), clean_word.lower())
                         final_word = clean_word.replace(clean_word, sub_query)
                         final_sub_query = final_sub_query.replace(clean_word, final_word)
 
                 query_string = """SELECT * FROM "Knowledge" WHERE {};""".format(final_sub_query)
             else:
-                query_string = """SELECT * FROM "Knowledge" WHERE ("Knowledge".description @@ plainto_tsquery('{}') OR "Knowledge".title @@ plainto_tsquery('{}'));""".format(final_sub_query, final_sub_query)
+                query_string = """SELECT * FROM "Knowledge" WHERE ("Knowledge".description\
+                 @@ plainto_tsquery('{}') OR "Knowledge".title\
+                 @@ plainto_tsquery('{}'));""".format(final_sub_query, final_sub_query)
             print(query_string)
             search_data = DBSession.query(Knowledge).from_statement(text(query_string))
 
