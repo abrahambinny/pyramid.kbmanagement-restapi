@@ -29,14 +29,18 @@ class KnowledgeView(object):
             search_item = search_item.upper()
             search_words = re.split('OR|AND|NOT', search_item)
             final_sub_query = search_item
-            for word in search_words:
-                clean_word = word.replace('(','').replace(')','').replace(' ','').strip()
-                if (clean_word):
-                    sub_query = """("Knowledge".description @@ plainto_tsquery('{}') OR "Knowledge".title @@ plainto_tsquery('{}'))""".format(clean_word.lower(), clean_word.lower())
-                    final_word = clean_word.replace(clean_word, sub_query)
-                    final_sub_query = final_sub_query.replace(clean_word, final_word)
+            if len(search_words) > 1:
+                for word in search_words:
+                    clean_word = word.replace('(','').replace(')','').replace(' ','').strip()
+                    print(clean_word)
+                    if (clean_word):
+                        sub_query = """("Knowledge".description @@ plainto_tsquery('{}') OR "Knowledge".title @@ plainto_tsquery('{}'))""".format(clean_word.lower(), clean_word.lower())
+                        final_word = clean_word.replace(clean_word, sub_query)
+                        final_sub_query = final_sub_query.replace(clean_word, final_word)
 
-            query_string = """SELECT * FROM "Knowledge" WHERE {};""".format(final_sub_query)
+                query_string = """SELECT * FROM "Knowledge" WHERE {};""".format(final_sub_query)
+            else:
+                query_string = """SELECT * FROM "Knowledge" WHERE ("Knowledge".description @@ plainto_tsquery('{}') OR "Knowledge".title @@ plainto_tsquery('{}'));""".format(final_sub_query, final_sub_query)
             print(query_string)
             search_data = DBSession.query(Knowledge).from_statement(text(query_string))
 
