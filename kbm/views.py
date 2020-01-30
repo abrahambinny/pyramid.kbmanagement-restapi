@@ -4,6 +4,8 @@ from cornice import Service
 from cornice.resource import resource
 import json
 from kbm.models import Knowledge, DBSession
+from sqlalchemy import text
+from sqlalchemy.sql import func
 
 
 @resource(collection_path='/kbm', path='/kbm/{id}')
@@ -14,12 +16,25 @@ class KnowledgeView(object):
 
     def collection_get(self):
 
+        search_item = self.request.GET['search']
+        search_data = None
+
+        if (search_item):
+            print(search_item)
+            search_data = DBSession.query(Knowledge).from_statement(text("""SELECT * FROM "Knowledge" WHERE ("Knowledge".description @@ plainto_tsquery('python') AND "Knowledge".title @@ plainto_tsquery('python')) OR ("Knowledge".description @@ plainto_tsquery('microsoft') AND "Knowledge".title @@ plainto_tsquery('microsoft')) AND NOT ("Knowledge".description @@ plainto_tsquery('facebook') AND "Knowledge".title @@ plainto_tsquery('facebook'));"""))
+            # search_data = DBSession.query(Knowledge).filter(
+            #     Knowledge.title.op('@@')(func.plainto_tsquery(search_item)),
+            #     Knowledge.description.op('@@')(func.plainto_tsquery(search_item))
+            # )
+        else:
+            search_data = DBSession.query(Knowledge).order_by(Knowledge.id)
+
         return {
             'kbm': [
                 {'id': kbm.id, 'title': kbm.title, 'description': kbm.description,
                 'create_at': kbm.create_at, 'create_by': kbm.create_by, 'priority': kbm.priority}
 
-                    for kbm in DBSession.query(Knowledge).order_by(Knowledge.id)
+                    for kbm in search_data
 
                     ]
             }
@@ -65,3 +80,7 @@ class KnowledgeView(object):
 
                     ]
                 }
+
+    # @view_config(route_name='hello_json', renderer='json')
+    # def hello(self):
+    #     return {'name': 'Hello View'}

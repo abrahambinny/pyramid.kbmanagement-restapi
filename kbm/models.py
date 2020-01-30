@@ -1,15 +1,21 @@
 # kbm/models.py
 
 from pyramid.security import Allow, Everyone
-from sqlalchemy import Column, Integer, Text
+from sqlalchemy import Column, Integer, String, Index, Text, text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import scoped_session, sessionmaker
+from sqlalchemy.sql import func
 # from zope.sqlalchemy import ZopeTransactionExtension
 
 from zope.sqlalchemy import register
 DBSession = scoped_session(sessionmaker())
 register(DBSession)
 Base = declarative_base()
+
+def to_tsvector_ix(*columns):
+    s = " || ' ' || ".join(columns)
+    return func.to_tsvector('english', text(s))
+
 
 class Knowledge(Base):
     __tablename__ = 'Knowledge'
@@ -19,6 +25,14 @@ class Knowledge(Base):
     create_at = Column(Text)
     create_by = Column(Text)
     priority = Column(Integer)
+
+    __table_args__ = (
+        Index(
+            'ix_knowledge_tsv',
+            to_tsvector_ix('title', 'description'),
+            postgresql_using='gin'
+        ),
+    )
 
     def __init__(self, title, description, create_at ,create_by, priority):
         self.title = title

@@ -14,7 +14,7 @@ def test_api(cmd, note_id=None):
 
         resp = requests.post(req_url,
                     headers={'Content-Type': 'application/json'},
-                    data=json.dumps({   "title": "python",
+                    data=json.dumps({   "title": "python microsoft",
                                         "create_at": "2019-01-23 00:00",
                                         "create_by": "binny",
                                         "description": "python one",
@@ -25,10 +25,10 @@ def test_api(cmd, note_id=None):
 
         resp = requests.put('{}/{}'.format(req_url, note_id),
                     headers={'Content-Type': 'application/json'},
-                    data=json.dumps({   "title": "python",
+                    data=json.dumps({   "title": "python microsoft",
                                         "create_at": "2019-01-23 00:00",
-                                        "create_by": "binny",
-                                        "description": "python two",
+                                        "create_by": "nonu",
+                                        "description": "python one",
                                         "priority": 4,
                                     }))
         print(resp)

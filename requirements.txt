@@ -57,3 +57,4 @@ zope.sqlalchemy==1.2
 requests==2.22.0
 WebTest==2.0.33
 pytest==5.3.4
+elasticsearch<2.0.0
