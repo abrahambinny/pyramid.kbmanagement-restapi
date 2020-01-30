@@ -9,17 +9,3 @@ curl -X PUT 'localhost:9200/kbmindex' -H 'Content-Type: application/json' -d' {"
  curl -XGET "https://localhost:9200/_search" {"query": {"query_string" : {"query" : "(python) OR (facebook)", "default_field" : "title"}}}
 
   curl -X GET "localhost:9200/kbmindex/_search?pretty" -H 'Content-Type: application/json' -d'{"query": {"query_string" : {"query" : "(microsoft) OR (facebook)", "default_field" : "title"}}}'
-
-
-  (facebook AND microsoft) AND NOT (python)
-
-  pk python binny salah
-  1. (python OR facebook) AND NOT (microsoft)
-  True and Tues
-  True
-
-  2.  pytho AND !microsoft
-  3. Python
-
-
-  pk python binny microsoft
