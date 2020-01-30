@@ -36,6 +36,10 @@ def test_api(cmd, note_id=None):
         resp = requests.delete('{}/{}'.format(req_url, note_id))
         print(resp)
 
+    elif cmd == 'search':
+        resp = requests.get('{}?search={}'.format(req_url, note_id))
+        print(resp.text)
+
     else:
         print("wrong input command")
 

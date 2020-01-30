@@ -43,7 +43,7 @@ $VENV/bin/pytest kbm/tests.py -q
 
 ### REST API Testing
 
-### Run below scripts for GET, POST, PUT, DELETE
+### Run below scripts for GET, POST, PUT, DELETE, SEARCH
 ```
 $VENV/bin/python api_test.py get
 $VENV/bin/python api_test.py post
@@ -51,6 +51,12 @@ $VENV/bin/python api_test.py put 1
 $VENV/bin/python api_test.py post
 $VENV/bin/python api_test.py put 2
 $VENV/bin/python api_test.py delete 2
+
+# Testing search functionality
+$VENV/bin/python api_test.py search '(facebook OR microsoft) AND NOT (python)'
+$VENV/bin/python api_test.py search '(facebook AND microsoft) AND NOT (python)'
+$VENV/bin/python api_test.py search '(facebook OR microsoft)'
+$VENV/bin/python api_test.py search 'python'
 
 ```
 
@@ -60,6 +66,14 @@ $VENV/bin/python api_test.py delete 2
 
 ```
 import requests
+```
+
+### SEARCH functionality
+```
+requests.get('http://localhost:6543/kbm?search=(facebook OR microsoft) AND NOT (python)')
+requests.get('http://localhost:6543/kbm?search=(facebook AND microsoft) AND NOT (python)')
+requests.get('http://localhost:6543/kbm?search=(facebook OR microsoft)')
+requests.get('http://localhost:6543/kbm?search=python')
 ```
 
 ### GET operation
