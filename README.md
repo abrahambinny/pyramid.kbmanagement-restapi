@@ -111,3 +111,7 @@ requests.put(
 ```
 requests.delete('http://localhost:6543/kbm/1')
 ```
+
+### Additional task
+### Also Implemented special text search using elasticsearch and pyramid
+[Elasticsearch implementation](README_ELASTIC.md)
