@@ -7,6 +7,8 @@ from kbm.models import Knowledge, DBSession
 from sqlalchemy import text
 from sqlalchemy.sql import func
 import re
+import json
+import requests
 
 
 @resource(collection_path='/kbm', path='/kbm/{id}')
@@ -17,7 +19,8 @@ class KnowledgeView(object):
 
     def collection_get(self):
 
-        search_item = self.request.GET['search']
+        search_item = self.request.GET.get('search','')
+        query_type = self.request.GET.get('type','')
         search_data = None
 
         if (search_item):
@@ -29,30 +32,12 @@ class KnowledgeView(object):
 
             search_item = search_item.upper()
             search_words = re.split('OR|AND|NOT', search_item)
-            final_sub_query = search_item
-            if len(search_words) > 1:
-                for word in search_words:
-                    clean_word = word.replace('(','').replace(')','').replace(' ','').strip()
-                    print(clean_word)
-                    if (clean_word):
-                        sub_query = """("Knowledge".description @@ plainto_tsquery('{}')\
-                         OR "Knowledge".title @@ plainto_tsquery('{}'))""".format(clean_word.lower(), clean_word.lower())
-                        final_word = clean_word.replace(clean_word, sub_query)
-                        final_sub_query = final_sub_query.replace(clean_word, final_word)
+            query_string = self.generate_query_string(search_item, search_words)
 
-                query_string = """SELECT * FROM "Knowledge" WHERE {};""".format(final_sub_query)
+            if (query_type and query_type == 'elastic'):
+                return self.generate_elastic_data(search_item)
             else:
-                query_string = """SELECT * FROM "Knowledge" WHERE ("Knowledge".description\
-                 @@ plainto_tsquery('{}') OR "Knowledge".title\
-                 @@ plainto_tsquery('{}'));""".format(final_sub_query, final_sub_query)
-            print(query_string)
-            search_data = DBSession.query(Knowledge).from_statement(text(query_string))
-
-            # Other way of doing the search on index
-            # search_data = DBSession.query(Knowledge).filter(
-            #     Knowledge.title.op('@@')(func.plainto_tsquery(search_item)),
-            #     Knowledge.description.op('@@')(func.plainto_tsquery(search_item))
-            # )
+                search_data = DBSession.query(Knowledge).from_statement(text(query_string))
 
         else:
             # Normal GET query based on id
@@ -65,6 +50,42 @@ class KnowledgeView(object):
                 'create_at': kbm.create_at, 'create_by': kbm.create_by, 'priority': kbm.priority}
 
                 for kbm in search_data
+
+            ]
+        }
+
+    def generate_query_string(self, search_item, search_words):
+        """
+        Generate query string for search query
+        """
+        final_sub_query = search_item
+        if len(search_words) > 1:
+            for word in search_words:
+                clean_word = word.replace('(','').replace(')','').replace(' ','').strip()
+                print(clean_word)
+                if (clean_word):
+                    sub_query = """("Knowledge".description @@ plainto_tsquery('{}') OR "Knowledge".title @@ plainto_tsquery('{}'))""".format(clean_word.lower(), clean_word.lower())
+                    final_word = clean_word.replace(clean_word, sub_query)
+                    final_sub_query = final_sub_query.replace(clean_word, final_word)
+            query_string = """SELECT * FROM "Knowledge" WHERE {};""".format(final_sub_query)
+        else:
+            query_string = """SELECT * FROM "Knowledge" WHERE ("Knowledge".description @@ plainto_tsquery('{}') OR "Knowledge".title @@ plainto_tsquery('{}'));""".format(final_sub_query, final_sub_query)
+        return query_string
+
+    def generate_elastic_data(self, search_item):
+        """
+        Generate the search data from elastic search
+        """
+
+        resp = requests.get('http://localhost:9200/kbmindex/_search?q={}'.format(search_item))
+        search_data = json.loads(resp.text)
+
+        return {
+            'kbm': [
+                {'id': kbm['_id'], 'title': kbm['_source']['title'], 'description': kbm['_source']['description'],
+                'create_at': kbm['_source']['create_at'], 'create_by': kbm['_source']['create_by'], 'priority': kbm['_source']['priority']}
+
+                for kbm in search_data['hits']['hits']
 
             ]
         }
