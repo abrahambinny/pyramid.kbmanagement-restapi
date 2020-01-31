@@ -80,7 +80,7 @@ curl -H "Content-Type: application/json" -X GET "http://localhost:9200/kbmindex/
 ### SEARCH operation using elasticsearch and pyramid
 ```
 requests.get('http://localhost:6543/kbm?search=(facebook OR microsoft) AND NOT (python)&type=elastic')
-requests.get('http://localhost:6543/kbm?search=(facebook AND microsoft) AND NOT (python)&type=elastic'')
-requests.get('http://localhost:6543/kbm?search=(facebook OR microsoft)&type=elastic'')
-requests.get('http://localhost:6543/kbm?search=python&type=elastic'')
+requests.get('http://localhost:6543/kbm?search=(facebook AND microsoft) AND NOT (python)&type=elastic')
+requests.get('http://localhost:6543/kbm?search=(facebook OR microsoft)&type=elastic')
+requests.get('http://localhost:6543/kbm?search=python&type=elastic')
 ```
